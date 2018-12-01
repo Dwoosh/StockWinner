@@ -29,4 +29,6 @@ public class DataPoint {
         this.price = price;
     }
 
+    public DataPoint(){}
+
 }

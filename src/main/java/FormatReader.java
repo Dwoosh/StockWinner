@@ -17,6 +17,5 @@ public abstract class FormatReader {
         this.path = path;
     }
 
-
     public abstract List<DataPoint> getDataPointList();
 }
