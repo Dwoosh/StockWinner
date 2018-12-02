@@ -22,38 +22,46 @@ public class NbpJsonReader extends FormatReader {
     public List<DataPoint> getDataPointList() {
 
         List<DataPoint> pointsList = new ArrayList<DataPoint>();
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
 
         try{
             Object obj = new JSONParser().parse(new FileReader(path));
-            JSONObject jo = (JSONObject) obj;
-            JSONArray ja = (JSONArray) jo.get("rates");
-
-            Iterator itr2 = ja.iterator();
-            Iterator<Map.Entry> itr1 = jo.entrySet().iterator();
-            SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
-
-            while (itr2.hasNext())
-            {
-                DataPoint dataPoint = new DataPoint();
-                itr1 = ((Map) itr2.next()).entrySet().iterator();
-                while (itr1.hasNext()) {
-                    Map.Entry pair = itr1.next();
-
-                    if(pair.getKey().equals("effectiveDate")){
-                        dataPoint.setDate(ft.parse((String)pair.getValue()));
-                    }
-                    else if(pair.getKey().equals("data")){
-                        dataPoint.setDate(ft.parse((String)pair.getValue()));
-                    }
-                    if(pair.getKey().equals("mid")){
-                        dataPoint.setPrice(new BigDecimal(pair.getValue().toString()));
-                    }
-                    else if(pair.getKey().equals("cena")){
-                        dataPoint.setPrice(new BigDecimal(pair.getValue().toString()));
-                    }
-
+            if(obj instanceof List<?>){         //dla zlota
+                Iterator iterator = ((List) obj).iterator();
+                while (iterator.hasNext()){
+                        JSONObject jo = (JSONObject) iterator.next();
+                        DataPoint dataPoint = new DataPoint();
+                        dataPoint.setDate(ft.parse(jo.get("data").toString()));
+                        dataPoint.setPrice(new BigDecimal(jo.get("cena").toString()));
+                        pointsList.add(dataPoint);
                 }
-                pointsList.add(dataPoint);
+
+            } else {    //dla walut
+                JSONObject jo = (JSONObject) obj;
+                JSONArray ja = (JSONArray) jo.get("rates");
+                Iterator itr2 = ja.iterator();
+                Iterator<Map.Entry> itr1 = jo.entrySet().iterator();
+
+                while (itr2.hasNext()) {
+                    DataPoint dataPoint = new DataPoint();
+                    itr1 = ((Map) itr2.next()).entrySet().iterator();
+                    while (itr1.hasNext()) {
+                        Map.Entry pair = itr1.next();
+
+                        if (pair.getKey().equals("effectiveDate")) {
+                            dataPoint.setDate(ft.parse((String) pair.getValue()));
+                        } else if (pair.getKey().equals("data")) {
+                            dataPoint.setDate(ft.parse((String) pair.getValue()));
+                        }
+                        if (pair.getKey().equals("mid")) {
+                            dataPoint.setPrice(new BigDecimal(pair.getValue().toString()));
+                        } else if (pair.getKey().equals("cena")) {
+                            dataPoint.setPrice(new BigDecimal(pair.getValue().toString()));
+                        }
+
+                    }
+                    pointsList.add(dataPoint);
+                }
             }
 
         } catch (FileNotFoundException e) {

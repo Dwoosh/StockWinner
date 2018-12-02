@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class NbpXmlReader extends FormatReader{
 
     public NbpXmlReader(String path) {
@@ -30,8 +31,14 @@ public class NbpXmlReader extends FormatReader{
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
             doc.getDocumentElement().normalize();       //recomended
-            NodeList nList = doc.getElementsByTagName("Rate");
 
+            String source;
+            Node root = doc.getDocumentElement();
+            if(root.getNodeName().equals("ExchangeRatesSeries")) source = "Rate";
+            else if(root.getNodeName().equals("ArrayOfCenaZlota")) source = "CenaZlota";
+            else throw new IOException("Bad file");
+
+            NodeList nList = doc.getElementsByTagName(source); //Rates
             SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -40,17 +47,17 @@ public class NbpXmlReader extends FormatReader{
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
                     DataPoint dataPoint = new DataPoint();
-                    if(eElement.getElementsByTagName("EffectiveDate") != null){
+                    if(eElement.getElementsByTagName("EffectiveDate").item(0) != null){
                         dataPoint.setDate(ft.parse(eElement.getElementsByTagName("EffectiveDate").item(0).getTextContent()));
                     }
-                    else if(eElement.getElementsByTagName("Data") != null){
+                    else if(eElement.getElementsByTagName("Data").item(0) != null){
                         dataPoint.setDate(ft.parse(eElement.getElementsByTagName("Data").item(0).getTextContent()));
                     }
 
-                    if(eElement.getElementsByTagName("Mid") != null) {
+                    if(eElement.getElementsByTagName("Mid").item(0) != null) {
                         dataPoint.setPrice(new BigDecimal(eElement.getElementsByTagName("Mid").item(0).getTextContent()));
                     }
-                    else if(eElement.getElementsByTagName("Cena") != null) {
+                    else if(eElement.getElementsByTagName("Cena").item(0) != null) {
                         dataPoint.setPrice(new BigDecimal(eElement.getElementsByTagName("Cena").item(0).getTextContent()));
                     }
                     pointsList.add(dataPoint);
