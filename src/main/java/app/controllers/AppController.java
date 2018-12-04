@@ -1,12 +1,14 @@
 package app.controllers;
 
-import app.base.Main;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+
 
 
 public class AppController {
@@ -21,12 +23,11 @@ public class AppController {
         try {
             primaryStage.setTitle("Stock Winner");
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/app/views/FileOpenerView.fxml"));
+            loader.setLocation(getClass().getClassLoader().getResource("views/FileOpenerView.fxml"));
             AnchorPane layout = loader.load();
 
             FileOpenerController controller = loader.getController();
             controller.initialize(this);
-
             Scene scene = new Scene(layout);
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -39,7 +40,7 @@ public class AppController {
     public void switchScene(String view){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource(view));
+            loader.setLocation(getClass().getResource(view));
             GraphDialogController controller = loader.getController();
             //zmiana pane'a jeśli trzeba
             AnchorPane layout = loader.load();
