@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.FileOpenerController">
-    <HBox layoutX="43.0" layoutY="27.0" prefHeight="100.0" prefWidth="500.0" AnchorPane.leftAnchor="43.0">
+<AnchorPane prefHeight="401.0" prefWidth="666.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.FileOpenerController">
+    <HBox layoutX="15.0" layoutY="27.0" prefHeight="94.0" prefWidth="638.0" AnchorPane.leftAnchor="15.0">
         <children>
             <Button fx:id="chooseFileButton" mnemonicParsing="false" onAction="#handleChoosingAction" text="Choose File">
             <HBox.margin>
                <Insets left="10.0" top="10.0" />
             </HBox.margin></Button>
-         <TextField fx:id="fileLocationField" disable="true" maxWidth="1.7976931348623157E308" promptText="File location">
+         <TextField fx:id="fileLocationField" disable="true" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="256.0" promptText="File location">
             <HBox.margin>
                <Insets left="5.0" top="10.0" />
             </HBox.margin>

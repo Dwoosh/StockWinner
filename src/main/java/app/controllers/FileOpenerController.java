@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import app.model.DataPointList;
-
 import java.io.File;
 
 public class FileOpenerController {
@@ -19,7 +18,6 @@ public class FileOpenerController {
 
     public void initialize(AppController appController) {
         this.appController = appController;
-        this.fileLocationField = new TextField();
         this.websitesComboBox.setItems(FXCollections.observableArrayList(WebSites.SupportedWebSites.values()));
     }
 
@@ -37,6 +35,7 @@ public class FileOpenerController {
 
     @FXML
     private void handleChoosingAction(ActionEvent event){
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.setInitialDirectory(

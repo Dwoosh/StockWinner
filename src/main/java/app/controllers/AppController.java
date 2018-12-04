@@ -1,13 +1,25 @@
 package app.controllers;
 
+import app.model.DataPoint;
+import app.model.DataPointList;
+import app.readers.FormatReader;
+import app.readers.ReaderFactory;
 import app.readers.WebSites;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sun.misc.FormattedFloatingDecimal;
+
+import java.util.Date;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 
 
@@ -44,13 +56,13 @@ public class AppController {
 
     public void switchScene(String view){
         try {
+            primaryStage.setTitle("Line Chart");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getClassLoader().getResource(view));
-            GraphDialogController controller = loader.getController();
-            //zmiana pane'a jeśli trzeba
             AnchorPane layout = loader.load();
-            controller.initialize(this);
 
+            GraphDialogController controller = loader.getController();
+            controller.initialize(this, fileLocation, chosenWebsite);
             Scene scene = new Scene(layout);
             primaryStage.setScene(scene);
             primaryStage.show();
