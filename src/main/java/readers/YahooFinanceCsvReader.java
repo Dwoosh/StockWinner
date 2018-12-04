@@ -1,9 +1,12 @@
+package readers;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import model.*;
 
 public class YahooFinanceCsvReader extends FormatReader {
 
@@ -11,7 +14,7 @@ public class YahooFinanceCsvReader extends FormatReader {
         super(path);
     }
 
-    public List<DataPoint> getDataPointList() {
+    public DataPointList getDataPointList() {
         List<DataPoint> pointList = new ArrayList<DataPoint>();
 
         String line;
@@ -36,6 +39,6 @@ public class YahooFinanceCsvReader extends FormatReader {
             e.printStackTrace();
         }
 
-        return pointList;
+        return new DataPointList(pointList);
     }
 }

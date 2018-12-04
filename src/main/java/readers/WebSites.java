@@ -1,3 +1,5 @@
+package readers;
+
 public class WebSites{
     public enum SupportedWebSites{
         NBP,                            //  http://api.nbp.pl

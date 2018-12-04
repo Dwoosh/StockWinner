@@ -1,4 +1,5 @@
 import org.junit.Test;
+import readers.NbpJsonReader;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,8 +9,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.*;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
 
 public class NbpJsonReaderTest {
 

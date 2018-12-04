@@ -1,11 +1,23 @@
+package model;
+
+import readers.FormatReader;
+
 import java.util.List;
 
 public class DataPointList {
 
     private List<DataPoint> dataPoints;
 
-    public void addDataPointListFromReader(FormatReader reader){
-        this.dataPoints = reader.getDataPointList();
+    public DataPointList(List<DataPoint> dataPoints) {
+        this.dataPoints = dataPoints;
+    }
+
+    public DataPoint get(int i){
+        return this.dataPoints.get(i);
+    }
+
+    public int size(){
+        return this.dataPoints.size();
     }
 
     public void setDataPoints(List<DataPoint> dataPoints) {

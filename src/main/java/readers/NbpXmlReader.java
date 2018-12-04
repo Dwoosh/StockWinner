@@ -1,3 +1,5 @@
+package readers;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import model.*;
 
 
 
@@ -23,7 +26,7 @@ public class NbpXmlReader extends FormatReader{
     }
 
 
-    public List<DataPoint> getDataPointList() {
+    public DataPointList getDataPointList() {
         List<DataPoint> pointsList = new ArrayList<DataPoint>();
         try {
             File inputFile = new File(path);
@@ -73,7 +76,7 @@ public class NbpXmlReader extends FormatReader{
         } catch (SAXException e1) {
             e1.printStackTrace();
         }
-        return pointsList;
+        return new DataPointList(pointsList);
     }
 }
 

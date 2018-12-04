@@ -1,3 +1,5 @@
+package readers;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import model.*;
 
 public class NbpJsonReader extends FormatReader {
 
@@ -19,7 +21,7 @@ public class NbpJsonReader extends FormatReader {
         super(path);
     }
 
-    public List<DataPoint> getDataPointList() {
+    public DataPointList getDataPointList() {
 
         List<DataPoint> pointsList = new ArrayList<DataPoint>();
         SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
@@ -74,6 +76,6 @@ public class NbpJsonReader extends FormatReader {
             e.printStackTrace();
         }
 
-        return pointsList;
+        return new DataPointList(pointsList);
     }
 }
