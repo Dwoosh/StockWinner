@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.readers.WebSites;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,8 @@ public class AppController {
     private Stage primaryStage;
 
     private String fileLocation;
+
+    private WebSites.SupportedWebSites chosenWebsite;
 
     public AppController(Stage stage){
         this.primaryStage = stage;
@@ -65,4 +68,7 @@ public class AppController {
         this.fileLocation = location;
     }
 
+    public void setChosenWebsite(WebSites.SupportedWebSites chosenWebsite) {
+        this.chosenWebsite = chosenWebsite;
+    }
 }
