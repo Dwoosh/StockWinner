@@ -1,10 +1,6 @@
-package readers;
+package app.readers;
 
-import model.*;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import app.model.DataPointList;
 
 public abstract class FormatReader {
     protected String path;

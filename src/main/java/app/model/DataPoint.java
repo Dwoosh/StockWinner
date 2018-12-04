@@ -1,4 +1,4 @@
-package model;
+package app.model;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;

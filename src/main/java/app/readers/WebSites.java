@@ -1,4 +1,4 @@
-package readers;
+package app.readers;
 
 public class WebSites{
     public enum SupportedWebSites{

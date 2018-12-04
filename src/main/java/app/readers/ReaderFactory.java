@@ -1,4 +1,4 @@
-package readers;
+package app.readers;
 
 import java.io.IOException;
 

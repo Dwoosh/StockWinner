@@ -1,4 +1,4 @@
-package readers;
+package app.readers;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -6,7 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import model.*;
+
+import app.model.DataPoint;
+import app.model.DataPointList;
 
 public class YahooFinanceCsvReader extends FormatReader {
 

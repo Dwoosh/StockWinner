@@ -1,5 +1,7 @@
-package readers;
+package app.readers;
 
+import app.model.DataPoint;
+import app.model.DataPointList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -15,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import model.*;
 
 
 

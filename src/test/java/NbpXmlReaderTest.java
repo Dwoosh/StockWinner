@@ -1,5 +1,5 @@
 import org.junit.Test;
-import readers.NbpXmlReader;
+import app.readers.NbpXmlReader;
 
 import java.io.BufferedWriter;
 import java.io.File;

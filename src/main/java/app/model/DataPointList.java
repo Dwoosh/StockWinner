@@ -1,6 +1,4 @@
-package model;
-
-import readers.FormatReader;
+package app.model;
 
 import java.util.List;
 

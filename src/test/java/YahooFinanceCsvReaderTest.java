@@ -1,5 +1,5 @@
 import org.junit.Test;
-import readers.YahooFinanceCsvReader;
+import app.readers.YahooFinanceCsvReader;
 
 import java.io.BufferedWriter;
 import java.io.File;

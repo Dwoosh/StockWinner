@@ -1,5 +1,7 @@
-package readers;
+package app.readers;
 
+import app.model.DataPoint;
+import app.model.DataPointList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import model.*;
 
 public class NbpJsonReader extends FormatReader {
 

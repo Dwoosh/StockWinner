@@ -1,5 +1,5 @@
 import org.junit.Test;
-import readers.NbpJsonReader;
+import app.readers.NbpJsonReader;
 
 import java.io.BufferedWriter;
 import java.io.File;
