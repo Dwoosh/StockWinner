@@ -15,6 +15,8 @@ public class AppController {
 
     private Stage primaryStage;
 
+    private String fileLocation;
+
     public AppController(Stage stage){
         this.primaryStage = stage;
     }
@@ -40,7 +42,7 @@ public class AppController {
     public void switchScene(String view){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(view));
+            loader.setLocation(getClass().getClassLoader().getResource(view));
             GraphDialogController controller = loader.getController();
             //zmiana pane'a jeśli trzeba
             AnchorPane layout = loader.load();
@@ -57,6 +59,10 @@ public class AppController {
 
     public Stage getPrimaryStage(){
         return this.primaryStage;
+    }
+
+    public void setFileLocation(String location){
+        this.fileLocation = location;
     }
 
 }

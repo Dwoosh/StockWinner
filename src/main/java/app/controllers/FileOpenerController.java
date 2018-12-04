@@ -63,7 +63,8 @@ public class FileOpenerController {
             alert.showAndWait();
             return;
         }
-
+        appController.setFileLocation(fileLocationField.getText());
+        appController.switchScene("views/GraphView.fxml");
     }
 
 }
