@@ -48,7 +48,9 @@ public class FileOpenerController {
                 new FileChooser.ExtensionFilter("XML File", "*.xml")
         );
         File file = fileChooser.showOpenDialog(appController.getPrimaryStage());
-        fileLocationField.setText(file.getAbsolutePath());
+        if(file != null){
+            fileLocationField.setText(file.getAbsolutePath());
+        }
     }
 
     @FXML
