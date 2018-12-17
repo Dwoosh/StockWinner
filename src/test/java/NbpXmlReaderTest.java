@@ -14,7 +14,7 @@ public class NbpXmlReaderTest {
 
     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
 
-    File tempFileGold;      //http://api.nbp.pl/api/exchangerates/rates/a/gbp/2012-01-01/2012-01-31/?format=json
+    File tempFileGold;
     {
         try {
             tempFileGold = File.createTempFile("json", ".json");
