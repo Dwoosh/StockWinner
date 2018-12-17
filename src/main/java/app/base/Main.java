@@ -10,6 +10,7 @@ public class Main extends Application {
 
     private AppController appController;
 
+    //TEST IN BRANCHES
     @Override
     public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
