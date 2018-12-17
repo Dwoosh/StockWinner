@@ -117,7 +117,7 @@ public class NbpXmlReaderTest {
     }
     NbpXmlReader readerGold = new NbpXmlReader(tempFileGold.getPath());
 
-    File tempFileGBP;      //http://api.nbp.pl/api/exchangerates/rates/a/gbp/2012-01-01/2012-01-31/?format=json
+    File tempFileGBP;
     {
         try {
             tempFileGBP = File.createTempFile("json", ".json");
