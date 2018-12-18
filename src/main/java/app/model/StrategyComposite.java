@@ -7,8 +7,13 @@ import java.util.ArrayList;
 
 public class StrategyComposite implements IStrategyComponent {
 
-    private ArrayList<IStrategyComponent> strategies = new ArrayList<IStrategyComponent>();
+    private ArrayList<IStrategyComponent> strategies;
     private StrategyEnums.Conditions condition;
+
+    public StrategyComposite(IStrategyComponent strategyComponent){
+        this.strategies = new ArrayList<>();
+        this.strategies.add(strategyComponent);
+    }
 
     public void addStrategy(IStrategyComponent strategy){
         strategies.add(strategy);

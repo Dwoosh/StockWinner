@@ -1,3 +1,5 @@
+package app.readers;
+
 import app.readers.*;
 import org.junit.Test;
 

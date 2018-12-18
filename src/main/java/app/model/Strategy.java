@@ -56,6 +56,7 @@ public class Strategy implements IStrategyComponent{
         }
         BigDecimal threshold;
         boolean result = false;
+        percent = percent.divide(new BigDecimal(100.0));
         switch (action){
             //check if maximum is equal or greater than minimum with applied percent change
             case BUY:
@@ -66,7 +67,7 @@ public class Strategy implements IStrategyComponent{
             case SELL:
                 threshold = max.getPrice().multiply(percent);
                 threshold = max.getPrice().subtract(threshold);
-                result = min.getPrice().compareTo(threshold) <= 0;
+                result = min.getPrice().compareTo(threshold) >= 0;
                 break;
         }
         return result;

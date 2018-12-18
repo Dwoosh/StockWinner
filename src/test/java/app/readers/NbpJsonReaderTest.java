@@ -1,3 +1,5 @@
+package app.readers;
+
 import org.junit.Test;
 import app.readers.NbpJsonReader;
 
