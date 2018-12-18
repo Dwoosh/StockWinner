@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.exceptions.InvalidContentException;
 import app.exceptions.InvalidConditionException;
 import app.exceptions.NoValidDateFoundException;
 import app.model.*;
@@ -74,8 +75,17 @@ public class GraphDialogController {
 
         ReaderFactory readerFactory = new ReaderFactory();
         FormatReader reader = readerFactory.concreteReader(fileLocation, chosenWebsite);
-        pointList =  reader.getDataPointList();
+        try {
+            pointList = reader.getDataPointList(fileLocation);
 
+        } catch (InvalidContentException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Invalid content of file");
+            alert.setContentText("Choose another file");
+            alert.showAndWait();
+        }
+        
         for(DataPoint dp: pointList.getDataPoints()) {
             series.getData().add(new XYChart.Data(dp.getDate().toString(), dp.getPrice()));
             this.dateFrom.getItems().add(dp.getDate());
