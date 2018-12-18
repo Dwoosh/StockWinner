@@ -6,8 +6,8 @@ public class StrategyEnums {
         OR,
         NONE, //condition for first or single strategy
     }
-    public enum Actions{
-        SELL,
-        BUY,
+    public enum Change {
+        DECREASE,
+        INCREASE,
     }
 }

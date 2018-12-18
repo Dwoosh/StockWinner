@@ -22,7 +22,7 @@ public class StrategyTest {
         Date fromDate = new GregorianCalendar(2018,12,10).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
         BigDecimal percent = new BigDecimal(100.0);
-        StrategyEnums.Actions action = StrategyEnums.Actions.BUY;
+        StrategyEnums.Change action = StrategyEnums.Change.INCREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
         DataPointList dataPointList = mock(DataPointList.class);
@@ -49,7 +49,7 @@ public class StrategyTest {
         Date fromDate = new GregorianCalendar(2018,12,8).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
         BigDecimal percent = new BigDecimal(200.0);
-        StrategyEnums.Actions action = StrategyEnums.Actions.BUY;
+        StrategyEnums.Change action = StrategyEnums.Change.INCREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
         DataPointList dataPointList = mock(DataPointList.class);
@@ -83,7 +83,7 @@ public class StrategyTest {
         Date fromDate = new GregorianCalendar(2018,12,8).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
         BigDecimal percent = new BigDecimal(200.0);
-        StrategyEnums.Actions action = StrategyEnums.Actions.BUY;
+        StrategyEnums.Change action = StrategyEnums.Change.INCREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
         DataPointList dataPointList = mock(DataPointList.class);
@@ -117,7 +117,7 @@ public class StrategyTest {
         Date fromDate = new GregorianCalendar(2018,12,8).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
         BigDecimal percent = new BigDecimal(75.0);
-        StrategyEnums.Actions action = StrategyEnums.Actions.SELL;
+        StrategyEnums.Change action = StrategyEnums.Change.DECREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
         DataPointList dataPointList = mock(DataPointList.class);
@@ -151,7 +151,7 @@ public class StrategyTest {
         Date fromDate = new GregorianCalendar(2018,12,8).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
         BigDecimal percent = new BigDecimal(75.0);
-        StrategyEnums.Actions action = StrategyEnums.Actions.SELL;
+        StrategyEnums.Change action = StrategyEnums.Change.DECREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
         DataPointList dataPointList = mock(DataPointList.class);

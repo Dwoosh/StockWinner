@@ -11,11 +11,11 @@ public class Strategy implements IStrategyComponent{
 
     private Date fromDate, toDate;
     private BigDecimal percent;
-    private StrategyEnums.Actions action;
+    private StrategyEnums.Change action;
     private StrategyEnums.Conditions condition;
     private DataPointList dataPointList;
 
-    public Strategy(Date fromDate, Date toDate, BigDecimal percent, StrategyEnums.Actions action,
+    public Strategy(Date fromDate, Date toDate, BigDecimal percent, StrategyEnums.Change action,
                     StrategyEnums.Conditions condition, DataPointList dataPointList){
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -59,12 +59,12 @@ public class Strategy implements IStrategyComponent{
         percent = percent.divide(new BigDecimal(100.0));
         switch (action){
             //check if maximum is equal or greater than minimum with applied percent change
-            case BUY:
+            case INCREASE:
                 threshold = min.getPrice().multiply(percent);
                 result = max.getPrice().compareTo(threshold) >= 0;
                 break;
             //check if minimum is equal or less than maximum with applied percent change
-            case SELL:
+            case DECREASE:
                 threshold = max.getPrice().multiply(percent);
                 threshold = max.getPrice().subtract(threshold);
                 result = min.getPrice().compareTo(threshold) >= 0;

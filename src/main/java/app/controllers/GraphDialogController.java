@@ -42,7 +42,7 @@ public class GraphDialogController {
     private ComboBox<Date> dateTo;
 
     @FXML
-    private ComboBox<StrategyEnums.Actions> action;
+    private ComboBox<StrategyEnums.Change> change;
 
     @FXML
     private ComboBox<StrategyEnums.Conditions> condition;
@@ -57,10 +57,12 @@ public class GraphDialogController {
 
     private StrategyComposite strategyComposite;
 
+    private boolean secondStrategy = false;
+
     public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite, Pane chartParent) throws IOException {
 
         this.appController = controller;
-        this.action.setItems(FXCollections.observableArrayList(StrategyEnums.Actions.values()));
+        this.change.setItems(FXCollections.observableArrayList(StrategyEnums.Change.values()));
         this.condition.getItems().addAll(
             StrategyEnums.Conditions.AND,
                 StrategyEnums.Conditions.OR
@@ -99,29 +101,57 @@ public class GraphDialogController {
     @FXML
     private void handleAddCondButton(ActionEvent event){
 
+        if((secondStrategy && condition.getSelectionModel().isEmpty()) ||
+            dateFrom.getSelectionModel().isEmpty() ||
+            dateTo.getSelectionModel().isEmpty() ||
+            percent.getText().isEmpty() ||
+            change.getSelectionModel().isEmpty()) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Value not set");
+            alert.setContentText("Please set all needed values");
+            alert.showAndWait();
+            return;
+        }
+
+        Double percentValue = new Double(percent.getText());
+        if(percentValue <0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Incorrect percent");
+            alert.setContentText("Percent change should not be < 0");
+            alert.showAndWait();
+            return;
+        }
+        percentValue = percentValue /100;
+        if(change.getValue().equals(StrategyEnums.Change.INCREASE))
+            percentValue +=1;
+        BigDecimal val = new BigDecimal(percentValue);
+
         String cond;
         if(condition.getSelectionModel().isEmpty()){
+
             cond = "";
             condition.setDisable(false);
             IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
-                    new BigDecimal(percent.getText()), action.getValue(), condition.getValue(), pointList);
+                    val, change.getValue(), StrategyEnums.Conditions.NONE, pointList);
             strategyComposite = new StrategyComposite(strategy);
-            strategyComposite.setCondition(StrategyEnums.Conditions.NONE);
+            secondStrategy = true;
 
         }
         else {
             cond = condition.getValue().toString();
             condition.setDisable(true);
             IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
-                    new BigDecimal(percent.getText()), action.getValue(), condition.getValue(), pointList);
+                    val, change.getValue(), condition.getValue(), pointList);
             strategyComposite.addStrategy(strategy);
-            strategyComposite.setCondition(condition.getValue());
         }
 
 
         condList.getItems().add(cond +" From " + dateFrom.getValue()
                 + " to " + dateTo.getValue() + " percent change " + percent.getText()
-                + " action " + action.getValue().toString());
+                + " action " + change.getValue().toString());
 
 
     }
@@ -141,7 +171,7 @@ public class GraphDialogController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Incorrect date period:");
-            alert.setContentText("No valid date was found");
+            alert.setContentText(ex.getMessage());
             alert.showAndWait();
             return;
         }
@@ -149,7 +179,7 @@ public class GraphDialogController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Invalid condition");
-            alert.setContentText("Invalid condition exception");
+            alert.setContentText(ex.getMessage());
             alert.showAndWait();
             return;
         }
