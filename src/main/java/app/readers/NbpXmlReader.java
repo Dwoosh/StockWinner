@@ -1,5 +1,6 @@
 package app.readers;
 
+import app.exceptions.InvalidContentException;
 import app.model.DataPoint;
 import app.model.DataPointList;
 import org.w3c.dom.Document;
@@ -22,12 +23,7 @@ import java.util.List;
 
 public class NbpXmlReader extends FormatReader{
 
-    public NbpXmlReader(String path) {
-        super(path);
-    }
-
-
-    public DataPointList getDataPointList() {
+    public DataPointList getDataPointList(String path) throws InvalidContentException {
         List<DataPoint> pointsList = new ArrayList<DataPoint>();
         try {
             File inputFile = new File(path);
@@ -40,7 +36,7 @@ public class NbpXmlReader extends FormatReader{
             Node root = doc.getDocumentElement();
             if(root.getNodeName().equals("ExchangeRatesSeries")) source = "Rate";
             else if(root.getNodeName().equals("ArrayOfCenaZlota")) source = "CenaZlota";
-            else throw new IOException("Bad file");
+            else throw new InvalidContentException();
 
             NodeList nList = doc.getElementsByTagName(source); //Rates
             SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
@@ -69,13 +65,13 @@ public class NbpXmlReader extends FormatReader{
             }
 
         } catch (ParserConfigurationException e1) {
-            e1.printStackTrace();
+
         } catch (IOException e1) {
-            e1.printStackTrace();
-        } catch (ParseException e1) {
-            e1.printStackTrace();
+
         } catch (SAXException e1) {
-            e1.printStackTrace();
+
+        } catch (ParseException e) {
+            throw new InvalidContentException();
         }
         return new DataPointList(pointsList);
     }
