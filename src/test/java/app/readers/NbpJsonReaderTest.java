@@ -1,5 +1,5 @@
-package app.readers;
-
+import app.exceptions.InvalidContentException;
+import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import app.readers.NbpJsonReader;
 
@@ -27,7 +27,7 @@ public class NbpJsonReaderTest {
         }
     }
     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-    NbpJsonReader readerGBP = new NbpJsonReader(tempFileGBP.getPath());
+    NbpJsonReader readerGBP = new NbpJsonReader();
 
     File tempFileGold;      //http://api.nbp.pl/api/exchangerates/rates/a/gbp/2012-01-01/2012-01-31/?format=json
     {
@@ -41,32 +41,32 @@ public class NbpJsonReaderTest {
             e.printStackTrace();
         }
     }
-    NbpJsonReader readerGold = new NbpJsonReader(tempFileGold.getPath());
+    NbpJsonReader readerGold = new NbpJsonReader();
 
     //testy dla walut
     @Test
-    public void DateFromFile1() {
-        assertEquals("2012-01-02", ft.format(readerGBP.getDataPointList().get(0).getDate()));
+    public void DateFromFile1() throws InvalidContentException {
+        assertEquals("2012-01-02", ft.format(readerGBP.getDataPointList(tempFileGBP.getPath()).get(0).getDate()));
     }
     @Test
-    public void PriceFromFile1() {
-        assertEquals(BigDecimal.valueOf(5.3394), readerGBP.getDataPointList().get(1).getPrice());
+    public void PriceFromFile1() throws InvalidContentException {
+        assertEquals(BigDecimal.valueOf(5.3394), readerGBP.getDataPointList(tempFileGBP.getPath()).get(1).getPrice());
     }
     @Test
-    public void ListSize() {
-        assertEquals(5, readerGBP.getDataPointList().size());
+    public void ListSize() throws InvalidContentException {
+        assertEquals(5, readerGBP.getDataPointList(tempFileGBP.getPath()).size());
     }
 
 
 
     //testy dla zlota
     @Test
-    public void DateFromFile2() {
-        assertEquals("2018-10-18", ft.format(readerGold.getDataPointList().get(0).getDate()));
+    public void DateFromFile2() throws InvalidContentException {
+        assertEquals("2018-10-18", ft.format(readerGold.getDataPointList(tempFileGold.getPath()).get(0).getDate()));
     }
     @Test
-    public void PriceFromFile2() {
-        assertEquals(BigDecimal.valueOf(146.67), readerGold.getDataPointList().get(1).getPrice());
+    public void PriceFromFile2() throws InvalidContentException {
+        assertEquals(BigDecimal.valueOf(146.67), readerGold.getDataPointList(tempFileGold.getPath()).get(1).getPrice());
     }
 
 }

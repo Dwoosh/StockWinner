@@ -12,6 +12,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sun.misc.FormattedFloatingDecimal;
@@ -53,7 +54,7 @@ public class AppController {
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            
         }
     }
 
@@ -71,7 +72,11 @@ public class AppController {
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("This format is not supported");
+            alert.setContentText("Choose another file or source website!");
+            alert.showAndWait();
         }
     }
 

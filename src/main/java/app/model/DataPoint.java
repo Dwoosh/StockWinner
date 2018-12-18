@@ -28,7 +28,8 @@ public class DataPoint {
     }
 
     public void setPrice(BigDecimal price) {
-        this.price = price;
+        if(price.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Price cannot be lower than zero");
+        else this.price = price;
     }
 
     public DataPoint(){}
