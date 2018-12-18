@@ -7,16 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.controllers.AppController;
+import app.exceptions.InvalidContentException;
 import app.model.DataPoint;
 import app.model.DataPointList;
+import javafx.scene.control.Alert;
 
 public class YahooFinanceCsvReader extends FormatReader {
 
-    public YahooFinanceCsvReader(String path) {
-        super(path);
-    }
-
-    public DataPointList getDataPointList() {
+     public DataPointList getDataPointList(String path) throws InvalidContentException {
         List<DataPoint> pointList = new ArrayList<DataPoint>();
 
         String line;
@@ -30,17 +29,18 @@ public class YahooFinanceCsvReader extends FormatReader {
                 String[] data = line.split(cvsSplitBy);
                 DataPoint dataPoint = new DataPoint();
                 if(data[0].equals("Date")) continue; //bez pierwszej linii
+                else if(!data[0].equals("Date")) throw new InvalidContentException();
                 dataPoint.setDate(ft.parse(data[0]));
                 dataPoint.setPrice(new BigDecimal(data[1]));
                 pointList.add(dataPoint);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new InvalidContentException();
         }
 
-        return new DataPointList(pointList);
+         return new DataPointList(pointList);
     }
 }
