@@ -1,3 +1,4 @@
+package app.readers;
 import app.exceptions.InvalidContentException;
 import org.junit.Test;
 import app.readers.YahooFinanceCsvReader;
