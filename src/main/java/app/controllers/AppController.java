@@ -28,6 +28,9 @@ public class AppController {
 
     private Stage primaryStage;
 
+    private Scene helloScene;
+    private Scene graphScene;
+
     private String fileLocation;
 
     private WebSites.SupportedWebSites chosenWebsite;
@@ -45,8 +48,8 @@ public class AppController {
 
             FileOpenerController controller = loader.getController();
             controller.initialize(this);
-            Scene scene = new Scene(layout);
-            primaryStage.setScene(scene);
+            helloScene = new Scene(layout);
+            primaryStage.setScene(helloScene);
             primaryStage.show();
         }
         catch (IOException e){
@@ -54,7 +57,7 @@ public class AppController {
         }
     }
 
-    public void switchScene(String view){
+    public void initGraphScene(String view){
         try {
             primaryStage.setTitle("Line Chart");
             FXMLLoader loader = new FXMLLoader();
@@ -62,14 +65,19 @@ public class AppController {
             AnchorPane layout = loader.load();
 
             GraphDialogController controller = loader.getController();
-            controller.initialize(this, fileLocation, chosenWebsite);
-            Scene scene = new Scene(layout);
-            primaryStage.setScene(scene);
+            controller.initialize(this, fileLocation, chosenWebsite, layout);
+            graphScene = new Scene(layout);
+            primaryStage.setScene(graphScene);
             primaryStage.show();
         }
         catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public void goBackToFirstWindow() {
+        primaryStage.setScene(helloScene);
+        primaryStage.show();
     }
 
     public Stage getPrimaryStage(){

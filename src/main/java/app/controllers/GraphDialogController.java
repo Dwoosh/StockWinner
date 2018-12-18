@@ -2,12 +2,14 @@ package app.controllers;
 
 import app.model.*;
 import app.readers.*;
+import app.support.ZoomManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
@@ -24,7 +26,7 @@ public class GraphDialogController {
     @FXML
     private LineChart<String, Number> lineChart;
 
-    public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite) throws IOException {
+    public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite, Pane chartParent) throws IOException {
 
         this.appController = controller;
 
@@ -41,16 +43,20 @@ public class GraphDialogController {
         for(DataPoint dp: pointList.getDataPoints()) {
             series.getData().add(new XYChart.Data(dp.getDate().toString(), dp.getPrice()));
         }
-        lineChart.getData().add(series);
+        new ZoomManager(chartParent, lineChart,series);
     }
 
 
     @FXML
     private void handleGoingBack(ActionEvent event){
 
-        appController.initialize();
+        appController.goBackToFirstWindow();
     }
 
+    @FXML
+    private void handleReset(ActionEvent event){
 
+        appController.initGraphScene("views/GraphView.fxml");
+    }
 
 }
