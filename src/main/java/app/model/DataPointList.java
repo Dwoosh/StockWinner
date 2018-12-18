@@ -4,6 +4,8 @@ import java.util.List;
 
 public class DataPointList {
 
+    private String path;
+
     private List<DataPoint> dataPoints;
 
     public DataPointList(List<DataPoint> dataPoints) {
@@ -26,4 +28,7 @@ public class DataPointList {
         return dataPoints;
     }
 
+    public String getPath() {
+        return path;
+    }
 }
