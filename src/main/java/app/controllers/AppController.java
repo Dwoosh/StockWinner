@@ -12,6 +12,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sun.misc.FormattedFloatingDecimal;
