@@ -1,5 +1,7 @@
 package app.controllers;
 
+import app.exceptions.InvalidConditionException;
+import app.exceptions.NoValidDateFoundException;
 import app.model.*;
 import app.readers.*;
 import app.support.ZoomManager;
@@ -10,12 +12,15 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class GraphDialogController {
 
@@ -31,10 +36,10 @@ public class GraphDialogController {
     private LineChart<String, Number> lineChart;
 
     @FXML
-    private ComboBox dateFrom;
+    private ComboBox<Date> dateFrom;
 
     @FXML
-    private ComboBox dateTo;
+    private ComboBox<Date> dateTo;
 
     @FXML
     private ComboBox<StrategyEnums.Actions> action;
@@ -48,11 +53,14 @@ public class GraphDialogController {
     @FXML
     private ListView<String> condList;
 
+    private DataPointList pointList;
+
+    private StrategyComposite strategyComposite;
+
     public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite, Pane chartParent) throws IOException {
 
         this.appController = controller;
         this.action.setItems(FXCollections.observableArrayList(StrategyEnums.Actions.values()));
-        //this.condition.setItems(FXCollections.observableArrayList(StrategyEnums.Conditions.values()));
         this.condition.getItems().addAll(
             StrategyEnums.Conditions.AND,
                 StrategyEnums.Conditions.OR
@@ -66,12 +74,12 @@ public class GraphDialogController {
 
         ReaderFactory readerFactory = new ReaderFactory();
         FormatReader reader = readerFactory.concreteReader(fileLocation, chosenWebsite);
-        DataPointList pointList =  reader.getDataPointList();
+        pointList =  reader.getDataPointList();
 
         for(DataPoint dp: pointList.getDataPoints()) {
             series.getData().add(new XYChart.Data(dp.getDate().toString(), dp.getPrice()));
-            this.dateFrom.getItems().add(dp.getDate().toString());
-            this.dateTo.getItems().add(dp.getDate().toString());
+            this.dateFrom.getItems().add(dp.getDate());
+            this.dateTo.getItems().add(dp.getDate());
         }
         new ZoomManager(chartParent, lineChart,series);
     }
@@ -95,21 +103,56 @@ public class GraphDialogController {
         if(condition.getSelectionModel().isEmpty()){
             cond = "";
             condition.setDisable(false);
+            IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
+                    new BigDecimal(percent.getText()), action.getValue(), condition.getValue(), pointList);
+            strategyComposite = new StrategyComposite(strategy);
+            strategyComposite.setCondition(StrategyEnums.Conditions.NONE);
 
         }
         else {
             cond = condition.getValue().toString();
             condition.setDisable(true);
+            IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
+                    new BigDecimal(percent.getText()), action.getValue(), condition.getValue(), pointList);
+            strategyComposite.addStrategy(strategy);
+            strategyComposite.setCondition(condition.getValue());
         }
 
 
         condList.getItems().add(cond +" From " + dateFrom.getValue()
                 + " to " + dateTo.getValue() + " percent change " + percent.getText()
                 + " action " + action.getValue().toString());
+
+
     }
 
     @FXML
     private void handleDoneButton(ActionEvent event){
+
+        try {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Eveluation");
+            alert.setHeaderText("Strategy evaluation:");
+            String text = String.valueOf(strategyComposite.evaluate());
+            alert.setContentText(text);
+            alert.showAndWait();
+        }
+        catch (NoValidDateFoundException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Incorrect date period:");
+            alert.setContentText("No valid date was found");
+            alert.showAndWait();
+            return;
+        }
+        catch (InvalidConditionException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid condition");
+            alert.setContentText("Invalid condition exception");
+            alert.showAndWait();
+            return;
+        }
 
 
     }
