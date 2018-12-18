@@ -1,5 +1,6 @@
 package app.readers;
 
+import app.exceptions.InvalidContentException;
 import app.model.DataPoint;
 import app.model.DataPointList;
 import org.json.simple.JSONArray;
@@ -18,11 +19,8 @@ import java.util.Map;
 
 public class NbpJsonReader extends FormatReader {
 
-    public NbpJsonReader(String path) {
-        super(path);
-    }
 
-    public DataPointList getDataPointList() {
+    public DataPointList getDataPointList(String path) throws InvalidContentException {
 
         List<DataPoint> pointsList = new ArrayList<DataPoint>();
         SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
@@ -42,6 +40,7 @@ public class NbpJsonReader extends FormatReader {
             } else {    //dla walut
                 JSONObject jo = (JSONObject) obj;
                 JSONArray ja = (JSONArray) jo.get("rates");
+                if(ja == null) throw new InvalidContentException();
                 Iterator itr2 = ja.iterator();
                 Iterator<Map.Entry> itr1 = jo.entrySet().iterator();
 
@@ -68,13 +67,14 @@ public class NbpJsonReader extends FormatReader {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+
         } catch (IOException e) {
-            e.printStackTrace();
+
         } catch (java.text.ParseException e) {
-            e.printStackTrace();
+
+        } catch (ParseException e) {
+            throw new InvalidContentException();
         }
 
         return new DataPointList(pointsList);
