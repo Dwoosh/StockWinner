@@ -53,7 +53,7 @@ public class AppController {
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            
         }
     }
 
@@ -71,7 +71,11 @@ public class AppController {
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("This format is not supported");
+            alert.setContentText("Choose another file or source website!");
+            alert.showAndWait();
         }
     }
 
