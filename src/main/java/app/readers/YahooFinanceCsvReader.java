@@ -24,11 +24,11 @@ public class YahooFinanceCsvReader extends FormatReader {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
-            while ((line = br.readLine()) != null) {
-
+            if(!br.readLine().split(cvsSplitBy)[0].equals("Date")) throw new InvalidContentException();
+            
+             while ((line = br.readLine()) != null) {
                 String[] data = line.split(cvsSplitBy);
                 DataPoint dataPoint = new DataPoint();
-                if(data[0].equals("Date")) continue; //bez pierwszej linii
                 dataPoint.setDate(ft.parse(data[0]));
                 dataPoint.setPrice(new BigDecimal(data[1]));
                 pointList.add(dataPoint);
