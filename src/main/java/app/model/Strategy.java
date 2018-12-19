@@ -67,7 +67,7 @@ public class Strategy implements IStrategyComponent{
             case DECREASE:
                 threshold = max.getPrice().multiply(percent);
                 threshold = max.getPrice().subtract(threshold);
-                result = min.getPrice().compareTo(threshold) >= 0;
+                result = min.getPrice().compareTo(threshold) <= 0;
                 break;
         }
         return result;

@@ -116,7 +116,7 @@ public class StrategyTest {
         //given
         Date fromDate = new GregorianCalendar(2018,12,8).getTime();
         Date toDate = new GregorianCalendar(2018,12,12).getTime();
-        BigDecimal percent = new BigDecimal(75.0);
+        BigDecimal percent = new BigDecimal(50.0);
         StrategyEnums.Change action = StrategyEnums.Change.DECREASE;
         StrategyEnums.Conditions condition = StrategyEnums.Conditions.NONE;
 
