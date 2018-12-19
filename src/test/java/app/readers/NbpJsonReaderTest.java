@@ -1,7 +1,6 @@
+package app.readers;
 import app.exceptions.InvalidContentException;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
-import app.readers.NbpJsonReader;
 
 import java.io.BufferedWriter;
 import java.io.File;

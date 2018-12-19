@@ -1,6 +1,6 @@
+package app.readers;
 import app.exceptions.InvalidContentException;
 import org.junit.Test;
-import app.readers.NbpXmlReader;
 
 import java.io.BufferedWriter;
 import java.io.File;

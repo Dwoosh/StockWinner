@@ -1,14 +1,12 @@
 package app.readers;
 import app.exceptions.InvalidContentException;
 import org.junit.Test;
-import app.readers.YahooFinanceCsvReader;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.*;
