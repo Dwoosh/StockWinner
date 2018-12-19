@@ -9,8 +9,8 @@
         <module name="stock-winner" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="stock-winner" target="1.5" />
+    <bytecodeTargetLevel target="8">
+      <module name="stock-winner" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

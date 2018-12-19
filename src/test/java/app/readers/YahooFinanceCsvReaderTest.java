@@ -1,5 +1,6 @@
+package app.readers;
+import app.exceptions.InvalidContentException;
 import org.junit.Test;
-import app.readers.YahooFinanceCsvReader;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,25 +31,25 @@ public class YahooFinanceCsvReaderTest {
         }
     }
     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-    YahooFinanceCsvReader readerCSV = new YahooFinanceCsvReader(tempFileCSV.getPath());
+    YahooFinanceCsvReader readerCSV = new YahooFinanceCsvReader();
 
     @Test
-    public void DateFromFile1() {
-        assertEquals("2018-10-30", ft.format(readerCSV.getDataPointList().get(0).getDate()));
+    public void DateFromFile1() throws InvalidContentException {
+        assertEquals("2018-10-30", ft.format(readerCSV.getDataPointList(tempFileCSV.getPath()).get(0).getDate()));
     }
 
     @Test
-    public void DateFromFile2() {
-        assertEquals("2018-11-02", ft.format(readerCSV.getDataPointList().get(3).getDate()));
+    public void DateFromFile2() throws InvalidContentException {
+        assertEquals("2018-11-02", ft.format(readerCSV.getDataPointList(tempFileCSV.getPath()).get(3).getDate()));
     }
 
     @Test
-    public void PriceFromFile1() {
-        assertEquals(BigDecimal.valueOf(19.110001), readerCSV.getDataPointList().get(1).getPrice());
+    public void PriceFromFile1() throws InvalidContentException {
+        assertEquals(BigDecimal.valueOf(19.110001), readerCSV.getDataPointList(tempFileCSV.getPath()).get(1).getPrice());
     }
     @Test
-    public void ListSize() {
-        assertEquals(5, readerCSV.getDataPointList().size());
+    public void ListSize() throws InvalidContentException {
+        assertEquals(5, readerCSV.getDataPointList(tempFileCSV.getPath()).size());
     }
 
 }

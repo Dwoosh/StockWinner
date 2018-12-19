@@ -4,19 +4,30 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="550.0" prefWidth="712.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.GraphDialogController">
-   <children>
-      <LineChart fx:id="lineChart" layoutX="9.0" layoutY="11.0" prefHeight="478.0" prefWidth="695.0">
-        <xAxis>
-          <CategoryAxis fx:id="xAxis" side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="yAxis" side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <Button fx:id="backButton" layoutX="325.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleGoingBack" text="Back" />
-   </children>
+<AnchorPane prefHeight="766.0" prefWidth="724.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.GraphDialogController">
+    <children>
+        <LineChart fx:id="lineChart" layoutX="9.0" layoutY="11.0" prefHeight="383.0" prefWidth="695.0">
+            <xAxis>
+                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="yAxis" side="LEFT" />
+            </yAxis>
+        </LineChart>
+        <Button fx:id="backButton" layoutX="236.0" layoutY="394.0" mnemonicParsing="false" onAction="#handleGoingBack" text="Back" />
+        <Button fx:id="resetButton" layoutX="386.0" layoutY="394.0" mnemonicParsing="false" onAction="#handleReset" text="Reset" />
+        <ComboBox fx:id="dateFrom" layoutX="153.0" layoutY="430.0" prefHeight="30.0" prefWidth="122.0" promptText="Date From" />
+        <ComboBox fx:id="dateTo" layoutX="153.0" layoutY="468.0" prefHeight="30.0" prefWidth="122.0" promptText="Date To" />
+        <TextField fx:id="percent" layoutX="286.0" layoutY="445.0" prefHeight="30.0" prefWidth="197.0" promptText="Write percent here [0..100...]" />
+        <ComboBox fx:id="change" layoutX="502.0" layoutY="445.0" prefHeight="30.0" prefWidth="100.0" promptText="Change" />
+        <ComboBox fx:id="condition" disable="true" layoutX="23.0" layoutY="445.0" prefHeight="30.0" prefWidth="109.0" promptText="AND/OR" />
+        <Button fx:id="addCondButton" layoutX="614.0" layoutY="445.0" mnemonicParsing="false" onAction="#handleAddCondButton" text="AddCond" />
+        <ListView fx:id="condList" layoutX="30.0" layoutY="557.0" prefHeight="135.0" prefWidth="663.0" />
+        <Button fx:id="doneButton" layoutX="468.0" layoutY="510.0" mnemonicParsing="false" onAction="#handleDoneButton" text="Done" />
+    </children>
 </AnchorPane>
-

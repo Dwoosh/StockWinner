@@ -64,7 +64,7 @@ public class FileOpenerController {
         }
         appController.setFileLocation(fileLocationField.getText());
         appController.setChosenWebsite(websitesComboBox.getValue());
-        appController.switchScene("views/GraphView.fxml");
+        appController.initGraphScene("views/GraphView.fxml");
     }
 
 }

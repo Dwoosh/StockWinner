@@ -12,6 +12,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sun.misc.FormattedFloatingDecimal;
@@ -27,6 +28,9 @@ import java.net.URL;
 public class AppController {
 
     private Stage primaryStage;
+
+    private Scene helloScene;
+    private Scene graphScene;
 
     private String fileLocation;
 
@@ -45,16 +49,16 @@ public class AppController {
 
             FileOpenerController controller = loader.getController();
             controller.initialize(this);
-            Scene scene = new Scene(layout);
-            primaryStage.setScene(scene);
+            helloScene = new Scene(layout);
+            primaryStage.setScene(helloScene);
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            
         }
     }
 
-    public void switchScene(String view){
+    public void initGraphScene(String view){
         try {
             primaryStage.setTitle("Line Chart");
             FXMLLoader loader = new FXMLLoader();
@@ -62,14 +66,23 @@ public class AppController {
             AnchorPane layout = loader.load();
 
             GraphDialogController controller = loader.getController();
-            controller.initialize(this, fileLocation, chosenWebsite);
-            Scene scene = new Scene(layout);
-            primaryStage.setScene(scene);
+            controller.initialize(this, fileLocation, chosenWebsite, layout);
+            graphScene = new Scene(layout);
+            primaryStage.setScene(graphScene);
             primaryStage.show();
         }
         catch (IOException e){
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("This format is not supported");
+            alert.setContentText("Choose another file or source website!");
+            alert.showAndWait();
         }
+    }
+
+    public void goBackToFirstWindow() {
+        primaryStage.setScene(helloScene);
+        primaryStage.show();
     }
 
     public Stage getPrimaryStage(){
