@@ -134,9 +134,8 @@ public class GraphDialogController {
             alert.showAndWait();
             return;
         }
-        percentValue = percentValue /100;
         if(change.getValue().equals(StrategyEnums.Change.INCREASE))
-            percentValue +=1;
+            percentValue += 100.0;
         BigDecimal val = new BigDecimal(percentValue);
 
         String cond;
