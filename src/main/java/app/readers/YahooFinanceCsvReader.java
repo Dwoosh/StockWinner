@@ -29,7 +29,6 @@ public class YahooFinanceCsvReader extends FormatReader {
                 String[] data = line.split(cvsSplitBy);
                 DataPoint dataPoint = new DataPoint();
                 if(data[0].equals("Date")) continue; //bez pierwszej linii
-                else if(!data[0].equals("Date")) throw new InvalidContentException();
                 dataPoint.setDate(ft.parse(data[0]));
                 dataPoint.setPrice(new BigDecimal(data[1]));
                 pointList.add(dataPoint);
