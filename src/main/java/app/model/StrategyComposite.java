@@ -35,7 +35,7 @@ public class StrategyComposite implements IStrategyComponent {
         boolean result = strategies.get(0).evaluate();
         for(int i = 1; i < strategies.size(); ++i){
             IStrategyComponent strategy = strategies.get(i);
-            switch (strategy.getCondition()){
+            switch (this.condition){
                 case AND:
                     result = result && strategy.evaluate();
                     break;

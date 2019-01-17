@@ -21,7 +21,11 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GraphDialogController {
 
@@ -37,10 +41,10 @@ public class GraphDialogController {
     private LineChart<String, Number> lineChart;
 
     @FXML
-    private ComboBox<Date> dateFrom;
+    private TextField dateFrom;
 
     @FXML
-    private ComboBox<Date> dateTo;
+    private TextField dateTo;
 
     @FXML
     private ComboBox<StrategyEnums.Change> change;
@@ -90,8 +94,6 @@ public class GraphDialogController {
         
         for(DataPoint dp: pointList.getDataPoints()) {
             series.getData().add(new XYChart.Data(dp.getDate().toString(), dp.getPrice()));
-            this.dateFrom.getItems().add(dp.getDate());
-            this.dateTo.getItems().add(dp.getDate());
         }
         new ZoomManager(chartParent, lineChart,series);
     }
@@ -112,8 +114,8 @@ public class GraphDialogController {
     private void handleAddCondButton(ActionEvent event){
 
         if((secondStrategy && condition.getSelectionModel().isEmpty()) ||
-            dateFrom.getSelectionModel().isEmpty() ||
-            dateTo.getSelectionModel().isEmpty() ||
+            dateFrom.getText().isEmpty() ||
+            dateTo.getText().isEmpty() ||
             percent.getText().isEmpty() ||
             change.getSelectionModel().isEmpty()) {
 
@@ -124,7 +126,18 @@ public class GraphDialogController {
             alert.showAndWait();
             return;
         }
-
+        Pattern pattern = Pattern.compile("^[0-9]+$");
+        Matcher matcher1 = pattern.matcher(dateFrom.getText());
+        Matcher matcher2 = pattern.matcher(dateTo.getText());
+        //if both fields contain only numbers and from is greater than to alert won't show
+        if(!(matcher1.find() && matcher2.find() && dateFrom.getText().compareTo(dateTo.getText()) > 0)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Incorrect date value(s)");
+            alert.setContentText("Field values should be integers and upper field should be greater than lower");
+            alert.showAndWait();
+            return;
+        }
         Double percentValue = new Double(percent.getText());
         if(percentValue <0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -138,28 +151,34 @@ public class GraphDialogController {
             percentValue += 100.0;
         BigDecimal val = new BigDecimal(percentValue);
 
-        String cond;
+        int fromDateInteger = Integer.parseInt(dateFrom.getText());
+        int toDateInteger = Integer.parseInt(dateTo.getText());
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR,-fromDateInteger);
+        Date from = now.getTime();
+        now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR,-toDateInteger);
+        Date to = now.getTime();
         if(condition.getSelectionModel().isEmpty()){
 
-            cond = "";
             condition.setDisable(false);
-            IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
-                    val, change.getValue(), StrategyEnums.Conditions.NONE, pointList);
+            IStrategyComponent strategy = new Strategy(from, to,
+                    val, change.getValue(), pointList);
             strategyComposite = new StrategyComposite(strategy);
             secondStrategy = true;
 
         }
         else {
-            cond = condition.getValue().toString();
             condition.setDisable(true);
-            IStrategyComponent strategy = new Strategy(dateFrom.getValue(), dateTo.getValue(),
-                    val, change.getValue(), condition.getValue(), pointList);
+            IStrategyComponent strategy = new Strategy(from, to,
+                    val, change.getValue(), pointList);
             strategyComposite.addStrategy(strategy);
+            strategyComposite.setCondition(condition.getValue());
         }
 
 
-        condList.getItems().add(cond +" From " + dateFrom.getValue()
-                + " to " + dateTo.getValue() + " percent change " + percent.getText()
+        condList.getItems().add(" From " + from
+                + " to " + to + " percent change " + percent.getText()
                 + " action " + change.getValue().toString());
 
 
@@ -170,7 +189,7 @@ public class GraphDialogController {
 
         try {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Eveluation");
+            alert.setTitle("Evaluation");
             alert.setHeaderText("Strategy evaluation:");
             String text = String.valueOf(strategyComposite.evaluate());
             alert.setContentText(text);
