@@ -7,6 +7,4 @@ public interface IStrategyComponent {
 
     boolean evaluate() throws NoValidDateFoundException, InvalidConditionException;
 
-    StrategyEnums.Conditions getCondition();
-
 }
