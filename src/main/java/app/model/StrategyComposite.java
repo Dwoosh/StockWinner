@@ -3,12 +3,16 @@ package app.model;
 import app.exceptions.InvalidConditionException;
 import app.exceptions.NoValidDateFoundException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class StrategyComposite implements IStrategyComponent {
 
     private ArrayList<IStrategyComponent> strategies;
     private StrategyEnums.Conditions condition;
+    private StrategyEnums.Decision decision;
+    private BigDecimal percentOfSth;
 
     public StrategyComposite(IStrategyComponent strategyComponent){
         this.strategies = new ArrayList<>();
@@ -31,16 +35,24 @@ public class StrategyComposite implements IStrategyComponent {
         return condition;
     }
 
-    public boolean evaluate() throws NoValidDateFoundException, InvalidConditionException {
-        boolean result = strategies.get(0).evaluate();
+    public void setDecision(StrategyEnums.Decision decision) {
+        this.decision = decision;
+    }
+
+    public void setPercentOfSth(BigDecimal percentOfSth) {
+        this.percentOfSth = percentOfSth;
+    }
+
+    public boolean evaluate(Date today) throws NoValidDateFoundException, InvalidConditionException {
+        boolean result = strategies.get(0).evaluate(today);
         for(int i = 1; i < strategies.size(); ++i){
             IStrategyComponent strategy = strategies.get(i);
             switch (this.condition){
                 case AND:
-                    result = result && strategy.evaluate();
+                    result = result && strategy.evaluate(today);
                     break;
                 case OR:
-                    result = result || strategy.evaluate();
+                    result = result || strategy.evaluate(today);
                     break;
                 case NONE:
                     throw new InvalidConditionException();

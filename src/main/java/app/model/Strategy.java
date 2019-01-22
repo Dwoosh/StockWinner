@@ -9,20 +9,28 @@ import java.util.List;
 
 public class Strategy implements IStrategyComponent{
 
+    private int daysPrior;
     private Date fromDate, toDate;
     private BigDecimal percent;
     private StrategyEnums.Change action;
     private DataPointList dataPointList;
 
-    public Strategy(Date fromDate, Date toDate, BigDecimal percent, StrategyEnums.Change action, DataPointList dataPointList){
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+    public Strategy(int daysPrior, BigDecimal percent, StrategyEnums.Change action, DataPointList dataPointList){
+        this.daysPrior = daysPrior;
         this.percent = percent;
         this.action = action;
         this.dataPointList = dataPointList;
     }
 
-    public boolean evaluate() throws NoValidDateFoundException{
+    public boolean evaluate(Date today) throws NoValidDateFoundException{
+        this.toDate = today;
+        int indexOfToDate = this.dataPointList.getIndexOfData(today);
+        if (indexOfToDate == -1)
+            throw new NoValidDateFoundException();
+        int indexOfFromDate = indexOfToDate - daysPrior;
+        if(indexOfFromDate <0)
+            throw new NoValidDateFoundException();
+        this.fromDate = this.dataPointList.get(indexOfFromDate).getDate();
         List<DataPoint> tmpList = new ArrayList<DataPoint>();
         for(DataPoint point : dataPointList.getDataPoints()){
             Date pointDate = point.getDate();

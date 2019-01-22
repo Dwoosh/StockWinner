@@ -10,4 +10,8 @@ public class StrategyEnums {
         DECREASE,
         INCREASE,
     }
+    public enum Decision {
+        BUY,
+        SELL,
+    }
 }

@@ -1,6 +1,7 @@
 package app.model;
 
 import java.util.List;
+import java.util.Date;
 
 public class DataPointList {
 
@@ -14,6 +15,15 @@ public class DataPointList {
 
     public DataPoint get(int i){
         return this.dataPoints.get(i);
+    }
+
+    public int getIndexOfData(Date date) {
+        for(int i =0; i<this.dataPoints.size();i++) {
+            if (this.dataPoints.get(i).getDate().compareTo(date) == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public int size(){
