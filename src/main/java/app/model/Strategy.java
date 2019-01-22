@@ -19,6 +19,7 @@ public class Strategy implements IStrategyComponent{
     public Strategy(int daysPrior, BigDecimal percent, StrategyEnums.Change action, DataPointList dataPointList){
         this.daysPrior = daysPrior;
         this.percent = percent;
+        this.percent = percent.divide(new BigDecimal(100.0), RoundingMode.HALF_UP);
         this.action = action;
         this.dataPointList = dataPointList;
     }
@@ -44,7 +45,7 @@ public class Strategy implements IStrategyComponent{
         DataPoint first = tmpList.get(0), last = tmpList.get(length-1);
         BigDecimal delta = last.getPrice().divide(first.getPrice(), RoundingMode.HALF_UP);
         boolean result = false;
-        percent = percent.divide(new BigDecimal(100.0), RoundingMode.HALF_UP);
+
         switch (action){
             case INCREASE:
                 result = delta.compareTo(percent) >= 0;

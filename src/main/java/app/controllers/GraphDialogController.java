@@ -168,7 +168,6 @@ public class GraphDialogController {
             percentValue = 100.0 - percentValue;
         }
         BigDecimal val = new BigDecimal(percentValue);
-
         int daysPriorInteger = Integer.parseInt(daysPrior.getText());
 
         if(condition.getSelectionModel().isEmpty()){
@@ -237,6 +236,7 @@ public class GraphDialogController {
                 if(sellOrBuyAction) {
                     switch (sc.getDecision()){
                         case BUY:
+
                             portfolio.buy(sc.getPercentOfFundsOrPortfolio());
                             break;
                         case SELL:
