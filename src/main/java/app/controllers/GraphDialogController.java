@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -310,7 +311,9 @@ public class GraphDialogController {
             return;
         }
         this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setDecision(decision.getValue());
-        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfFundsOrPortfolio(new BigDecimal(percentOfFundsOrPortfolio.getText()));
+        BigDecimal percentOfFP = new BigDecimal(percentOfFundsOrPortfolio.getText());
+        percentOfFP = percentOfFP.divide(new BigDecimal(100), RoundingMode.HALF_UP);
+        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfFundsOrPortfolio(percentOfFP);
 
         condList.getItems().add("                THEN " + decision.getValue().toString()
                 + " " + percentOfFundsOrPortfolio.getText()
