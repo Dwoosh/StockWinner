@@ -3,6 +3,7 @@ package app.model;
 import app.exceptions.NoValidDateFoundException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,9 +42,9 @@ public class Strategy implements IStrategyComponent{
         if(tmpList.isEmpty()) throw new NoValidDateFoundException();
         int length = tmpList.size();
         DataPoint first = tmpList.get(0), last = tmpList.get(length-1);
-        BigDecimal delta = last.getPrice().divide(first.getPrice());
+        BigDecimal delta = last.getPrice().divide(first.getPrice(), RoundingMode.HALF_UP);
         boolean result = false;
-        percent = percent.divide(new BigDecimal(100.0));
+        percent = percent.divide(new BigDecimal(100.0), RoundingMode.HALF_UP);
         switch (action){
             case INCREASE:
                 result = delta.compareTo(percent) >= 0;

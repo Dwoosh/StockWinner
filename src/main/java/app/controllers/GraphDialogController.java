@@ -79,9 +79,12 @@ public class GraphDialogController {
 
     private boolean secondStrategy = false;
 
+    Pane chartParent;
+
     public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite, Pane chartParent) throws IOException {
 
         this.appController = controller;
+        this.chartParent = chartParent;
         this.change.setItems(FXCollections.observableArrayList(StrategyEnums.Change.values()));
         this.condition.getItems().addAll(
             StrategyEnums.Conditions.AND,
@@ -205,9 +208,82 @@ public class GraphDialogController {
     @FXML
     private void handleDoneButton(ActionEvent event){
 
+        xAxis.setLabel("Date");
+        yAxis.setLabel("Value");
 
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Value of portfolio over time");
 
+        /*
+        for(DataPoint dp: pointList.getDataPoints()) {
+            series.getData().add(new XYChart.Data(dp.getDate().toString(), dp.getPrice()));
+        }
+        new ZoomManager(chartParent, lineChart,series);
+        */
 
+        Pattern pattern = Pattern.compile("^[0-9]+$");
+        Matcher matcher = pattern.matcher(funds.getText());
+
+        if(!(matcher.find()  && funds.getText().compareTo("0") > 0) || funds.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Incorrect start funds");
+            alert.setContentText("Field value should be integer >0");
+            alert.showAndWait();
+            return;
+        }
+
+        BigDecimal startFunds = new BigDecimal(funds.getText());
+        BigDecimal units = new BigDecimal(0);
+        BigDecimal valueOfUnits = new BigDecimal(0);
+        BigDecimal overallValue = new BigDecimal(funds.getText());
+
+        Boolean result = false;
+
+        for (DataPoint dp : pointList.getDataPoints()) {
+            if(units.compareTo(new BigDecimal(0))>0) {
+                BigDecimal newValueOfUnits = units.multiply(dp.getPrice());
+                BigDecimal change = newValueOfUnits.subtract(valueOfUnits);
+                overallValue.add(change);
+            }
+            for (StrategyComposite sc : strategyCompositeList) {
+                try {
+                    result = sc.evaluate(dp.getDate());
+                }
+                catch (NoValidDateFoundException | InvalidConditionException ex) {
+                    //pass
+                }
+                if(result) {
+                    switch (sc.getDecision()){
+                        case BUY:
+                            BigDecimal expense = startFunds.multiply(sc.getPercentOfFundsOrPortfolio());
+                            BigDecimal price = dp.getPrice();
+                            if (expense.compareTo(price) <0)
+                                break;
+                            BigDecimal unitsToBuy = expense.divide(price, BigDecimal.ROUND_DOWN);
+                            units.add(unitsToBuy);
+                            startFunds = startFunds.subtract(expense);
+                            valueOfUnits = units.multiply(dp.getPrice());
+                            overallValue = startFunds.add(valueOfUnits);
+                            break;
+                        case SELL:
+                            BigDecimal sellValue = valueOfUnits.multiply(sc.getPercentOfFundsOrPortfolio());
+                            BigDecimal currPrice = dp.getPrice();
+                            if (sellValue.compareTo(currPrice) <0)
+                                break;
+                            BigDecimal unitsToSell = sellValue.divide(currPrice, BigDecimal.ROUND_DOWN);
+                            units.subtract(unitsToSell);
+                            startFunds = startFunds.add(sellValue);
+                            valueOfUnits = units.multiply(currPrice);
+                            overallValue = startFunds.add(valueOfUnits);
+                            break;
+                    }
+                }
+            }
+            series.getData().add(new XYChart.Data(dp.getDate().toString(), overallValue));
+        }
+        //new ZoomManager(chartParent, lineChartResult,series);
+        lineChartResult.getData().add(series);
     }
 
     @FXML
@@ -234,7 +310,7 @@ public class GraphDialogController {
             return;
         }
         this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setDecision(decision.getValue());
-        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfSth(new BigDecimal(percentOfFundsOrPortfolio.getText()));
+        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfFundsOrPortfolio(new BigDecimal(percentOfFundsOrPortfolio.getText()));
 
         condList.getItems().add("                THEN " + decision.getValue().toString()
                 + " " + percentOfFundsOrPortfolio.getText()

@@ -12,7 +12,7 @@ public class StrategyComposite implements IStrategyComponent {
     private ArrayList<IStrategyComponent> strategies;
     private StrategyEnums.Conditions condition;
     private StrategyEnums.Decision decision;
-    private BigDecimal percentOfSth;
+    private BigDecimal percentOfFundsOrPortfolio;
 
     public StrategyComposite(IStrategyComponent strategyComponent){
         this.strategies = new ArrayList<>();
@@ -38,9 +38,16 @@ public class StrategyComposite implements IStrategyComponent {
     public void setDecision(StrategyEnums.Decision decision) {
         this.decision = decision;
     }
+    public StrategyEnums.Decision getDecision() {
+        return this.decision;
+    }
 
-    public void setPercentOfSth(BigDecimal percentOfSth) {
-        this.percentOfSth = percentOfSth;
+    public void setPercentOfFundsOrPortfolio(BigDecimal percentOfFundsOrPortfolio) {
+        this.percentOfFundsOrPortfolio = percentOfFundsOrPortfolio;
+    }
+
+    public BigDecimal getPercentOfFundsOrPortfolio() {
+        return this.percentOfFundsOrPortfolio;
     }
 
     public boolean evaluate(Date today) throws NoValidDateFoundException, InvalidConditionException {
