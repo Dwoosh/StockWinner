@@ -41,4 +41,8 @@ public class DataPointList {
     public String getPath() {
         return path;
     }
+
+    public void addDataPointToList(DataPoint dp) {
+        dataPoints.add(dp);
+    }
 }

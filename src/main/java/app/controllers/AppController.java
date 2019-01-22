@@ -31,10 +31,13 @@ public class AppController {
 
     private Scene helloScene;
     private Scene graphScene;
+    private Scene resultsScene;
 
     private String fileLocation;
 
     private WebSites.SupportedWebSites chosenWebsite;
+
+    private DataPointList resultsList;
 
     public AppController(Stage stage){
         this.primaryStage = stage;
@@ -85,6 +88,34 @@ public class AppController {
         primaryStage.show();
     }
 
+    public void initResultsScene(String view) {
+
+        try {
+            primaryStage.setTitle("Strategy results");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource(view));
+            AnchorPane layout = loader.load();
+
+            ResultsController controller = loader.getController();
+            controller.initialize(this, this.resultsList, layout);
+            resultsScene = new Scene(layout);
+            primaryStage.setScene(resultsScene);
+            primaryStage.show();
+        }
+        catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Error");
+            alert.setContentText("Error during UI loading");
+            alert.showAndWait();
+        }
+    }
+
+    public void goBackToGraphScene() {
+        primaryStage.setScene(graphScene);
+        primaryStage.show();
+    }
+
     public Stage getPrimaryStage(){
         return this.primaryStage;
     }
@@ -95,5 +126,9 @@ public class AppController {
 
     public void setChosenWebsite(WebSites.SupportedWebSites chosenWebsite) {
         this.chosenWebsite = chosenWebsite;
+    }
+
+    public void setResultsList(DataPointList list) {
+        this.resultsList = list;
     }
 }

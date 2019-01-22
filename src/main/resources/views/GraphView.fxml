@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="839.0" prefWidth="1484.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.GraphDialogController">
+<AnchorPane prefHeight="757.0" prefWidth="749.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.GraphDialogController">
     <children>
         <LineChart fx:id="lineChart" layoutX="9.0" layoutY="11.0" prefHeight="383.0" prefWidth="695.0">
             <xAxis>
@@ -31,14 +31,6 @@
       <ComboBox fx:id="decision" disable="true" layoutX="23.0" layoutY="511.0" prefHeight="30.0" prefWidth="157.0" promptText="THEN BUY/SELL" />
       <TextField fx:id="percentOfFundsOrPortfolio" disable="true" layoutX="195.0" layoutY="511.0" prefHeight="30.0" prefWidth="239.0" promptText="Percent [1...100] of funds/portfolio" />
       <Button fx:id="addDecisionButton" layoutX="453.0" layoutY="511.0" mnemonicParsing="false" onAction="#handleAddDecisionButton" text="AddDecision" />
-      <LineChart fx:id="lineChartResult" layoutX="724.0" layoutY="26.0" prefHeight="347.0" prefWidth="656.0">
-         <xAxis>
-            <CategoryAxis side="BOTTOM" fx:id="xResAxis" />
-         </xAxis>
-         <yAxis>
-            <NumberAxis fx:id="yResAxis" side="LEFT" />
-         </yAxis>
-      </LineChart>
       <TextField fx:id="funds" layoutX="31.0" layoutY="394.0" prefHeight="30.0" prefWidth="143.0" promptText="Funds-beginning" />
     </children>
 </AnchorPane>
