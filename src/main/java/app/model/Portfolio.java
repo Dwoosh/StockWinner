@@ -35,7 +35,7 @@ public class Portfolio {
         if(funds.subtract(expense).compareTo(new BigDecimal(0)) <=0)
             return;
         BigDecimal unitsToBuy = expense.divide(price, BigDecimal.ROUND_DOWN);
-        units.add(unitsToBuy);
+        units = units.add(unitsToBuy);
         funds = funds.subtract(expense);
     }
     public void sell(BigDecimal percentOfUnitsValue) {
@@ -46,7 +46,7 @@ public class Portfolio {
         BigDecimal unitsToSell = sellValue.divide(currPriceOfUnits, BigDecimal.ROUND_DOWN);
         if(unitsToSell.compareTo(units) >0)
             return;
-        units.subtract(unitsToSell);
+        units = units.subtract(unitsToSell);
         funds = funds.add(sellValue);
     }
 

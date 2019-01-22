@@ -276,7 +276,7 @@ public class GraphDialogController {
         }
         this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setDecision(decision.getValue());
         BigDecimal percentOfFP = new BigDecimal(percentOfFundsOrPortfolio.getText());
-        percentOfFP = percentOfFP.divide(new BigDecimal(100), RoundingMode.HALF_UP);
+        percentOfFP = percentOfFP.divide(new BigDecimal(100), 10, RoundingMode.HALF_UP);
         this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfFundsOrPortfolio(percentOfFP);
 
         condList.getItems().add("                THEN " + decision.getValue().toString()
