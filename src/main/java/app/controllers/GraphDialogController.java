@@ -21,9 +21,8 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,10 +40,7 @@ public class GraphDialogController {
     private LineChart<String, Number> lineChart;
 
     @FXML
-    private TextField dateFrom;
-
-    @FXML
-    private TextField dateTo;
+    private TextField daysPrior;
 
     @FXML
     private ComboBox<StrategyEnums.Change> change;
@@ -58,20 +54,40 @@ public class GraphDialogController {
     @FXML
     private ListView<String> condList;
 
+    @FXML
+    private ComboBox<StrategyEnums.Decision> decision;
+
+    @FXML
+    private TextField percentOfFundsOrPortfolio;
+
+    @FXML
+    private TextField funds;
+
+
     private DataPointList pointList;
 
-    private StrategyComposite strategyComposite;
+    private DataPointList resultsPointsList;
+
+    private List<StrategyComposite> strategyCompositeList;
 
     private boolean secondStrategy = false;
+
+    Pane chartParent;
 
     public void initialize(AppController controller, String fileLocation, WebSites.SupportedWebSites chosenWebsite, Pane chartParent) throws IOException {
 
         this.appController = controller;
+        this.chartParent = chartParent;
         this.change.setItems(FXCollections.observableArrayList(StrategyEnums.Change.values()));
         this.condition.getItems().addAll(
             StrategyEnums.Conditions.AND,
                 StrategyEnums.Conditions.OR
         );
+        this.decision.getItems().addAll(
+                StrategyEnums.Decision.BUY,
+                StrategyEnums.Decision.SELL
+        );
+        this.strategyCompositeList = new ArrayList<StrategyComposite>();
 
         xAxis.setLabel("Date");
         yAxis.setLabel("Price");
@@ -114,8 +130,7 @@ public class GraphDialogController {
     private void handleAddCondButton(ActionEvent event){
 
         if((secondStrategy && condition.getSelectionModel().isEmpty()) ||
-            dateFrom.getText().isEmpty() ||
-            dateTo.getText().isEmpty() ||
+            daysPrior.getText().isEmpty() ||
             percent.getText().isEmpty() ||
             change.getSelectionModel().isEmpty()) {
 
@@ -127,14 +142,14 @@ public class GraphDialogController {
             return;
         }
         Pattern pattern = Pattern.compile("^[0-9]+$");
-        Matcher matcher1 = pattern.matcher(dateFrom.getText());
-        Matcher matcher2 = pattern.matcher(dateTo.getText());
-        //if both fields contain only numbers and from is greater than to alert won't show
-        if(!(matcher1.find() && matcher2.find() && dateFrom.getText().compareTo(dateTo.getText()) > 0)) {
+        Matcher matcher1 = pattern.matcher(daysPrior.getText());
+        Matcher matcher2 = pattern.matcher(percent.getText());
+
+        if(!(matcher1.find()  && matcher2.find() && daysPrior.getText().compareTo("0") > 0)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Incorrect date value(s)");
-            alert.setContentText("Field values should be integers and upper field should be greater than lower");
+            alert.setHeaderText("Incorrect days prior or percent value");
+            alert.setContentText("Field value should be integer >0");
             alert.showAndWait();
             return;
         }
@@ -149,37 +164,36 @@ public class GraphDialogController {
         }
         if(change.getValue().equals(StrategyEnums.Change.INCREASE))
             percentValue += 100.0;
+        else {
+            percentValue = 100.0 - percentValue;
+        }
         BigDecimal val = new BigDecimal(percentValue);
 
-        int fromDateInteger = Integer.parseInt(dateFrom.getText());
-        int toDateInteger = Integer.parseInt(dateTo.getText());
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_YEAR,-fromDateInteger);
-        Date from = now.getTime();
-        now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_YEAR,-toDateInteger);
-        Date to = now.getTime();
+        int daysPriorInteger = Integer.parseInt(daysPrior.getText());
+
         if(condition.getSelectionModel().isEmpty()){
 
             condition.setDisable(false);
-            IStrategyComponent strategy = new Strategy(from, to,
+            IStrategyComponent strategy = new Strategy(daysPriorInteger,
                     val, change.getValue(), pointList);
-            strategyComposite = new StrategyComposite(strategy);
+            this.strategyCompositeList.add(new StrategyComposite(strategy));
+            decision.setDisable(false);
+            percentOfFundsOrPortfolio.setDisable(false);
             secondStrategy = true;
 
         }
         else {
             condition.setDisable(true);
-            IStrategyComponent strategy = new Strategy(from, to,
+            IStrategyComponent strategy = new Strategy(daysPriorInteger,
                     val, change.getValue(), pointList);
-            strategyComposite.addStrategy(strategy);
-            strategyComposite.setCondition(condition.getValue());
+            this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).addStrategy(strategy);
+            this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setCondition(condition.getValue());
         }
 
 
-        condList.getItems().add(" From " + from
-                + " to " + to + " percent change " + percent.getText()
-                + " action " + change.getValue().toString());
+        condList.getItems().add(" Days prior " + daysPriorInteger
+                + " percent change " + percent.getText()
+                + " change " + change.getValue().toString());
 
 
     }
@@ -187,31 +201,99 @@ public class GraphDialogController {
     @FXML
     private void handleDoneButton(ActionEvent event){
 
-        try {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Evaluation");
-            alert.setHeaderText("Strategy evaluation:");
-            String text = String.valueOf(strategyComposite.evaluate());
-            alert.setContentText(text);
-            alert.showAndWait();
-        }
-        catch (NoValidDateFoundException ex){
+        xAxis.setLabel("Date");
+        yAxis.setLabel("Value");
+
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Value of portfolio over time");
+
+        Pattern pattern = Pattern.compile("^[0-9]+$");
+        Matcher matcher = pattern.matcher(funds.getText());
+
+        if(!(matcher.find()  && funds.getText().compareTo("0") > 0) || funds.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Incorrect date period:");
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
-            return;
-        }
-        catch (InvalidConditionException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Invalid condition");
-            alert.setContentText(ex.getMessage());
+            alert.setHeaderText("Incorrect start funds");
+            alert.setContentText("Field value should be integer >0");
             alert.showAndWait();
             return;
         }
 
+        this.resultsPointsList = new DataPointList(new ArrayList<DataPoint>());
+        Portfolio portfolio = new Portfolio(new BigDecimal(funds.getText()));
+
+        Boolean sellOrBuyAction = false;
+
+        for (DataPoint dp : pointList.getDataPoints()) {
+
+            portfolio.updateValue(dp.getPrice());
+            for (StrategyComposite sc : strategyCompositeList) {
+                try {
+                    sellOrBuyAction = sc.evaluate(dp.getDate());
+                }
+                catch (NoValidDateFoundException | InvalidConditionException ex) {
+                    //pass
+                }
+                if(sellOrBuyAction) {
+                    switch (sc.getDecision()){
+                        case BUY:
+                            portfolio.buy(sc.getPercentOfFundsOrPortfolio());
+                            break;
+                        case SELL:
+                            portfolio.sell(sc.getPercentOfFundsOrPortfolio());
+                            break;
+                    }
+                }
+            }
+            resultsPointsList.addDataPointToList(new DataPoint(dp.getDate(),portfolio.getCurrentPortfolioValue()));
+        }
+        appController.setResultsList(this.resultsPointsList);
+        appController.initResultsScene("views/ResultsView.fxml");
+    }
+
+    @FXML
+    private void handleAddDecisionButton(ActionEvent event) {
+
+        if(decision.getSelectionModel().isEmpty() || percentOfFundsOrPortfolio.getText().isEmpty() ) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Decision not set");
+            alert.setContentText("Please set all needed values");
+            alert.showAndWait();
+            return;
+        }
+        Pattern pattern = Pattern.compile("^[0-9]+$");
+        Matcher matcher = pattern.matcher(percentOfFundsOrPortfolio.getText());
+
+        if(!(matcher.find()  && percentOfFundsOrPortfolio.getText().compareTo("0") > 0)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Incorrect percent");
+            alert.setContentText("Field value should be integer >0");
+            alert.showAndWait();
+            return;
+        }
+        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setDecision(decision.getValue());
+        BigDecimal percentOfFP = new BigDecimal(percentOfFundsOrPortfolio.getText());
+        percentOfFP = percentOfFP.divide(new BigDecimal(100), RoundingMode.HALF_UP);
+        this.strategyCompositeList.get(this.strategyCompositeList.size() - 1).setPercentOfFundsOrPortfolio(percentOfFP);
+
+        condList.getItems().add("                THEN " + decision.getValue().toString()
+                + " " + percentOfFundsOrPortfolio.getText()
+                + " percent ");
+
+        secondStrategy = false;
+        daysPrior.clear();
+        change.getSelectionModel().clearSelection();
+        change.setDisable(false);
+        condition.getSelectionModel().clearSelection();
+        condition.setDisable(true);
+        percent.clear();
+        decision.getSelectionModel().clearSelection();
+        decision.setDisable(true);
+        percentOfFundsOrPortfolio.clear();
+        percentOfFundsOrPortfolio.setDisable(true);
 
     }
 

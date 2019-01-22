@@ -31,12 +31,12 @@ public class StrategyTest {
         dataPoints.add(new DataPoint(pointDate,percent));
 
         //when
-        Strategy strategy = new Strategy(fromDate,toDate,percent,action,condition,dataPointList);
+        Strategy strategy = new Strategy(2,percent,action,dataPointList);
         when(dataPointList.getDataPoints()).thenReturn(dataPoints);
 
         //then
         try {
-            strategy.evaluate();
+            strategy.evaluate(toDate);
         }
         catch (Exception ex){
             assertTrue(ex instanceof NoValidDateFoundException);
@@ -66,12 +66,12 @@ public class StrategyTest {
                 new BigDecimal(60.0)));
 
         //when
-        Strategy strategy = new Strategy(fromDate,toDate,percent,action,condition,dataPointList);
+        Strategy strategy = new Strategy(4,percent,action,dataPointList);
         when(dataPointList.getDataPoints()).thenReturn(dataPoints);
 
         //then
         try {
-            assertTrue(strategy.evaluate());
+            assertTrue(strategy.evaluate(toDate));
         }
         catch (Exception ex){ }
 
@@ -100,12 +100,12 @@ public class StrategyTest {
                 new BigDecimal(30.0)));
 
         //when
-        Strategy strategy = new Strategy(fromDate,toDate,percent,action,condition,dataPointList);
+        Strategy strategy = new Strategy(4,percent,action,dataPointList);
         when(dataPointList.getDataPoints()).thenReturn(dataPoints);
 
         //then
         try {
-            assertFalse(strategy.evaluate());
+            assertFalse(strategy.evaluate(toDate));
         }
         catch (Exception ex){ }
 
@@ -123,23 +123,23 @@ public class StrategyTest {
         DataPointList dataPointList = mock(DataPointList.class);
         List<DataPoint> dataPoints = new ArrayList<DataPoint>();
         dataPoints.add(new DataPoint(new GregorianCalendar(2018,12,8).getTime(),
-                new BigDecimal(20.0)));
+                new BigDecimal(60.0)));
         dataPoints.add(new DataPoint(new GregorianCalendar(2018,12,9).getTime(),
-                new BigDecimal(30.0)));
+                new BigDecimal(50.0)));
         dataPoints.add(new DataPoint(new GregorianCalendar(2018,12,10).getTime(),
                 new BigDecimal(40.0)));
         dataPoints.add(new DataPoint(new GregorianCalendar(2018,12,11).getTime(),
-                new BigDecimal(50.0)));
+                new BigDecimal(30.0)));
         dataPoints.add(new DataPoint(new GregorianCalendar(2018,12,12).getTime(),
-                new BigDecimal(60.0)));
+                new BigDecimal(20.0)));
 
         //when
-        Strategy strategy = new Strategy(fromDate,toDate,percent,action,condition,dataPointList);
+        Strategy strategy = new Strategy(4,percent,action,dataPointList);
         when(dataPointList.getDataPoints()).thenReturn(dataPoints);
 
         //then
         try {
-            assertTrue(strategy.evaluate());
+            assertTrue(strategy.evaluate(toDate));
         }
         catch (Exception ex){ }
 
@@ -168,12 +168,12 @@ public class StrategyTest {
                 new BigDecimal(40.0)));
 
         //when
-        Strategy strategy = new Strategy(fromDate,toDate,percent,action,condition,dataPointList);
+        Strategy strategy = new Strategy(4,percent,action,dataPointList);
         when(dataPointList.getDataPoints()).thenReturn(dataPoints);
 
         //then
         try {
-            assertFalse(strategy.evaluate());
+            assertFalse(strategy.evaluate(toDate));
         }
         catch (Exception ex){ }
 
