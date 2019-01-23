@@ -4,6 +4,8 @@ import app.exceptions.InvalidConditionException;
 import org.junit.Test;
 
 
+import java.util.Date;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -16,18 +18,18 @@ public class StrategyCompositeTest {
         //given
         Strategy firstStrategy = mock(Strategy.class);
         Strategy secondStrategy = mock(Strategy.class);
+        Date date = mock(Date.class);
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
         strategyComposite.addStrategy(secondStrategy);
+        strategyComposite.setCondition(StrategyEnums.Conditions.NONE);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(true);
-            when(secondStrategy.evaluate()).thenReturn(true);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
-            when(secondStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
+            when(firstStrategy.evaluate(date)).thenReturn(true);
+            when(secondStrategy.evaluate(date)).thenReturn(true);
 
             //then
-            strategyComposite.evaluate();
+            strategyComposite.evaluate(date);
         }
         catch (Exception ex){
             assertTrue(ex instanceof InvalidConditionException);
@@ -39,14 +41,14 @@ public class StrategyCompositeTest {
         //given
         Strategy firstStrategy = mock(Strategy.class);
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
+        Date date = mock(Date.class);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(true);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
+            when(firstStrategy.evaluate(date)).thenReturn(true);
 
             //then
-            assertTrue(strategyComposite.evaluate());
+            assertTrue(strategyComposite.evaluate(date));
         }
         catch (Exception ex){ }
     }
@@ -60,18 +62,17 @@ public class StrategyCompositeTest {
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
         strategyComposite.addStrategy(secondStrategy);
         strategyComposite.addStrategy(thirdStrategy);
+        strategyComposite.setCondition(StrategyEnums.Conditions.AND);
+        Date date = mock(Date.class);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(true);
-            when(secondStrategy.evaluate()).thenReturn(true);
-            when(thirdStrategy.evaluate()).thenReturn(true);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
-            when(secondStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.AND);
-            when(thirdStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.AND);
+            when(firstStrategy.evaluate(date)).thenReturn(true);
+            when(secondStrategy.evaluate(date)).thenReturn(true);
+            when(thirdStrategy.evaluate(date)).thenReturn(true);
 
             //then
-            assertTrue(strategyComposite.evaluate());
+            assertTrue(strategyComposite.evaluate(date));
         }
         catch (Exception ex){ }
     }
@@ -85,18 +86,17 @@ public class StrategyCompositeTest {
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
         strategyComposite.addStrategy(secondStrategy);
         strategyComposite.addStrategy(thirdStrategy);
+        strategyComposite.setCondition(StrategyEnums.Conditions.AND);
+        Date date = mock(Date.class);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(true);
-            when(secondStrategy.evaluate()).thenReturn(false);
-            when(thirdStrategy.evaluate()).thenReturn(true);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
-            when(secondStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.AND);
-            when(thirdStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.AND);
+            when(firstStrategy.evaluate(date)).thenReturn(true);
+            when(secondStrategy.evaluate(date)).thenReturn(false);
+            when(thirdStrategy.evaluate(date)).thenReturn(true);
 
             //then
-            assertFalse(strategyComposite.evaluate());
+            assertFalse(strategyComposite.evaluate(date));
         }
         catch (Exception ex){ }
     }
@@ -110,18 +110,17 @@ public class StrategyCompositeTest {
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
         strategyComposite.addStrategy(secondStrategy);
         strategyComposite.addStrategy(thirdStrategy);
+        strategyComposite.setCondition(StrategyEnums.Conditions.OR);
+        Date date = mock(Date.class);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(true);
-            when(secondStrategy.evaluate()).thenReturn(false);
-            when(thirdStrategy.evaluate()).thenReturn(true);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
-            when(secondStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.OR);
-            when(thirdStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.OR);
+            when(firstStrategy.evaluate(date)).thenReturn(true);
+            when(secondStrategy.evaluate(date)).thenReturn(false);
+            when(thirdStrategy.evaluate(date)).thenReturn(true);
 
             //then
-            assertTrue(strategyComposite.evaluate());
+            assertTrue(strategyComposite.evaluate(date));
         }
         catch (Exception ex){ }
     }
@@ -135,18 +134,17 @@ public class StrategyCompositeTest {
         StrategyComposite strategyComposite = new StrategyComposite(firstStrategy);
         strategyComposite.addStrategy(secondStrategy);
         strategyComposite.addStrategy(thirdStrategy);
+        strategyComposite.setCondition(StrategyEnums.Conditions.OR);
+        Date date = mock(Date.class);
 
         try {
             //when
-            when(firstStrategy.evaluate()).thenReturn(false);
-            when(secondStrategy.evaluate()).thenReturn(false);
-            when(thirdStrategy.evaluate()).thenReturn(false);
-            when(firstStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.NONE);
-            when(secondStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.OR);
-            when(thirdStrategy.getCondition()).thenReturn(StrategyEnums.Conditions.OR);
+            when(firstStrategy.evaluate(date)).thenReturn(false);
+            when(secondStrategy.evaluate(date)).thenReturn(false);
+            when(thirdStrategy.evaluate(date)).thenReturn(false);
 
             //then
-            assertFalse(strategyComposite.evaluate());
+            assertFalse(strategyComposite.evaluate(date));
         }
         catch (Exception ex){ }
     }

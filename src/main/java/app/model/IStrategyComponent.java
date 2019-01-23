@@ -3,10 +3,10 @@ package app.model;
 import app.exceptions.InvalidConditionException;
 import app.exceptions.NoValidDateFoundException;
 
+import java.util.Date;
+
 public interface IStrategyComponent {
 
-    boolean evaluate() throws NoValidDateFoundException, InvalidConditionException;
-
-    StrategyEnums.Conditions getCondition();
+    boolean evaluate(Date today) throws NoValidDateFoundException, InvalidConditionException;
 
 }
